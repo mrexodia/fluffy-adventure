@@ -26,10 +26,9 @@ void MainWindow::on_buttonVisualize_clicked()
     file.close();
 
     Binviz binviz((unsigned char*)fileData.constData(), fileData.size());
-    int size = 256;
-    PointMatrix m(size);
-    int maxDups;
-    binviz.ProducePoints(m, maxDups);
+    PointMatrix m;
+    int size = m.size();
+    binviz.ProducePoints(m);
 
     QGraphicsScene* scene = new QGraphicsScene(this);
     ui->graphicsView->setScene(scene);
@@ -40,10 +39,10 @@ void MainWindow::on_buttonVisualize_clicked()
     qreal rectWidth = viewWidth / size;
     qreal rectHeight = viewHeight / size;
 
-    qDebug() << viewWidth;
-    qDebug() << viewHeight;
-    qDebug() << rectWidth;
-    qDebug() << rectHeight;
+    qDebug() << "viewWidth: " << viewWidth;
+    qDebug() << "viewHeight: " << viewHeight;
+    qDebug() << "rectWidth: " << rectWidth;
+    qDebug() << "rectHeight: " << rectHeight;
 
     QPen pen(Qt::transparent, 0);
 
@@ -74,13 +73,27 @@ F15854 (red)
     colors.append(QColor("#DECF3F"));
     colors.append(QColor("#F15854"));
 
+    qDebug() << "colors";
+    std::vector<unsigned long long> plot;
+    m.getDistribution(plot);
+    qDebug() << "getDistribution";
+    std::unordered_map<unsigned long long, int> slices;
+    m.sliceDistribution(colors.count() - 1, plot, slices);
+    qDebug() << "sliceDistribution";
+
+    QPixmap pixmap(viewWidth, viewHeight);
+    QPainter painter(&pixmap);
+
     for(int x = 0; x < size; x++)
     {
         for(int y = 0; y < size; y++)
         {
-            int count = m.at(x, y);
-            QColor color = colors[!count ? 0 : count % colors.size()];
-            scene->addRect(y * rectWidth, x * rectHeight, rectWidth, rectHeight, pen, QBrush(color));
+            int count = m.get(x, y);
+            QColor color = colors[!count ? 0 : slices[count] + 1];
+            //painter.setPen(color);
+            auto rect = QRectF(x * rectWidth, y * rectHeight, rectWidth, rectHeight);
+            painter.fillRect(rect, color);
         }
     }
+    scene->addPixmap(pixmap);
 }

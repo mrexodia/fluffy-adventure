@@ -36,7 +36,7 @@
       <item>
        <widget class="QLineEdit" name="editFilename">
         <property name="text">
-         <string>/Users/Duncan/lorem.txt</string>
+         <string>c:\CodeBlocks\fluffy-adventure\binvis.pro.user</string>
         </property>
        </widget>
       </item>

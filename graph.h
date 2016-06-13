@@ -2,24 +2,58 @@
 #define GRAPH_H
 
 #include <vector>
+#include <set>
+#include <unordered_map>
+#include <QDebug>
+
+#define MATRIX_SIZE 256
 
 class PointMatrix
 {
 public:
-    explicit PointMatrix(int size)
+    explicit PointMatrix()
     {
-        mMatrix.resize(size * size);
-        for(size_t i = 0; i < mMatrix.size(); i++)
-            mMatrix[i] = 0;
+        for(size_t i = 0; i < MATRIX_SIZE; i++)
+            for(size_t j = 0; j < MATRIX_SIZE; j++)
+                mMatrix[i][j] = 0;
     }
 
-    int & at(int x, int y)
+    void inc(int x, int y)
     {
-        return mMatrix[x * x + y];
+        mMatrix[x][y]++;
+    }
+
+    unsigned long long get(int x, int y)
+    {
+        return mMatrix[x][y];
+    }
+
+    void getDistribution(std::vector<unsigned long long> & plot)
+    {
+        plot.clear();
+        std::set<unsigned long long> s;
+        for(size_t x = 0; x < MATRIX_SIZE; x++)
+            for(size_t y = 0; y < MATRIX_SIZE; y++)
+                s.insert(mMatrix[x][y]);
+        plot.reserve(s.size());
+    }
+
+    void sliceDistribution(int count, const std::vector<unsigned long long> & plot, std::unordered_map<unsigned long long, int> & slices)
+    {
+        slices.clear();
+        int size = int(plot.size()) / count;
+        for(int i = 0; i < count; i++)
+            for(int j = 0; j < size; j++)
+                slices[plot.at(i * size + j)] = i;
+    }
+
+    int size()
+    {
+        return MATRIX_SIZE;
     }
 
 private:
-    std::vector<int> mMatrix;
+    unsigned long long mMatrix[MATRIX_SIZE][MATRIX_SIZE];
 };
 
 class Binviz
@@ -31,16 +65,11 @@ public:
     {
     }
 
-    void ProducePoints(PointMatrix & points, int & maxDups)
+    void ProducePoints(PointMatrix & points)
     {
-        maxDups = 0;
-        for(size_t i=0; i < mSize - 1; i++)
-        {
-            int & p = points.at(mData[i], mData[i + 1]);
-            p++;
-            if(p > maxDups)
-                maxDups = p;
-        }
+        for(size_t i = 0; i < mSize - 1; i++)
+            points.inc(mData[i], mData[i + 1]);
+        std::vector<unsigned long long> plot;
     }
 
 private:
