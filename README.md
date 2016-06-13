@@ -20,6 +20,4 @@ Screenshots:
 
 Distribution:
 
-![s9](http://i.imgur.com/ih4hEJw.png)
-
-![s8](http://i.imgur.com/ih4hEJw.png)
+![s8](http://i.imgur.com/0uS9RmE.png)
