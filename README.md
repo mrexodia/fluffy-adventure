@@ -1,4 +1,4 @@
-# binvis
+# fluffy-adventure
 
 Some fooling around with binary visualization (based on cantor.dust).
 
