@@ -36,6 +36,8 @@ public:
             for(size_t y = 0; y < MATRIX_SIZE; y++)
                 s.insert(mMatrix[x][y]);
         plot.reserve(s.size());
+        for(auto y : s)
+            plot.push_back(y);
     }
 
     void sliceDistribution(int count, const std::vector<unsigned long long> & plot, std::unordered_map<unsigned long long, int> & slices)
