@@ -1,6 +1,6 @@
 # fluffy-adventure
 
-Some fooling around with binary visualization (based on cantor.dust).
+Some fooling around with binary visualization (based on [cantor.dust](https://www.youtube.com/watch?v=C8--cXwuuFQ)).
 
 Screenshots:
 
